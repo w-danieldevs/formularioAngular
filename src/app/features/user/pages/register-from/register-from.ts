@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ValidorPassword } from '../../service/validor-password';
 
 
 @Component({
@@ -12,14 +13,20 @@ export class RegisterFrom {
 
 form: FormGroup;
 
-constructor(private fb: FormBuilder) {
+constructor(private fb: FormBuilder, private validorPassword: ValidorPassword   ) {
   this.form = this.fb.group({
     name: ['', Validators.required, Validators.minLength(3)],
     email: ['', [Validators.required, Validators.email]],
     nameUser: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
-    password: ['', Validators.required],
-    passwordConfirm: ['', Validators.required],
-  });
+    password: ['', Validators.required, Validators.minLength(8)],
+    passwordConfirm: ['', Validators.required, Validators.minLength(8)],
+    age: ['', [Validators.required, Validators.min(15), Validators.max(90)]],
+    terminos: [false, Validators.requiredTrue]
+  },
+  {
+    validators: [this.validorPassword.function()]
+  }
+    );
 }
   invalidado(controlName: string, errorName: string): boolean {
 
@@ -34,13 +41,14 @@ constructor(private fb: FormBuilder) {
     return haserror && touched;
   }
 
-
-
-
-
-
-
-    
-  
+  onSubmit(): void {
+    if(this.form.valid) {
+      console.log('Formulario válido:', this.form.value);
+    } else {
+      console.log('Formulario inválido');
+      this.form.markAllAsTouched();
+    }
+}
+     
 }
 
