@@ -50,14 +50,14 @@
 
     <div class ="confirmar-contraseña">
         <label for ="passwordConfirm">Confirmar Contraseña</label>
-        <input |type="password" id="passwordConfirm" formControlName="passwordConfirm" placeholder="Confirme su contraseña"/>
+        <input type="password" id="passwordConfirm" formControlName="passwordConfirm" placeholder="Confirme su contraseña"/>
         <p class="error" *ngIf = "invalidado ('passwordConfirm', 'required')">
             La confirmación de la contraseña es requerida
         </p>
         <p class="error" *ngIf = "invalidado ('passwordConfirm', 'minlength')">
             La confirmación de la contraseña debe tener al menos 8 caracteres
         </p>
-        <p class="error" *ngIf = "invalidado ('passwordConfirm', 'passwordMismatch')">
+        <p class="error" *ngIf = "passwordNoCoincide()">
             Las contraseñas no coinciden
         </p>
     </div>
@@ -81,15 +81,38 @@
             <input type="checkbox" formControlName="terminos"/>
             Acepto los términos y condiciones
         </label>
-        <p class="error" *ngIf = "invalidado ('terminos', 'required')">
+        <p class="error" *ngIf = "invalidado ('terminos', 'requiredTrue')">
             Debe aceptar los términos y condiciones
         </p>
     </div>
 
     <div class="boton">
-        <button type="submit" (click)="onSubmit()">Registrarse</button>
+        <button type="submit" (click)="onSubmit()"
+        [disabled]="form.invalid">Registrarse</button>
 
     </div>
+
+<div class="modal" *ngIf="mostrarModal">
+
+    <div class="contenido-modal">
+
+        <h2>Registro exitoso</h2>
+
+        <p><strong>Nombre:</strong> {{ datosRegistro.name }}</p>
+
+        <p><strong>Correo:</strong> {{ datosRegistro.email }}</p>
+
+        <p><strong>Usuario:</strong> {{ datosRegistro.nameUser }}</p>
+
+        <p><strong>Edad:</strong> {{ datosRegistro.age }}</p>
+
+        <button (click)="cerrarModal()">
+            Cerrar
+        </button>
+
+    </div>
+
+</div>
 
 
 

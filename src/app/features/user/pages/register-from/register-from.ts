@@ -15,11 +15,11 @@ form: FormGroup;
 
 constructor(private fb: FormBuilder, private validorPassword: ValidorPassword   ) {
   this.form = this.fb.group({
-    name: ['', Validators.required, Validators.minLength(3)],
+    name: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
     nameUser: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
-    password: ['', Validators.required, Validators.minLength(8)],
-    passwordConfirm: ['', Validators.required, Validators.minLength(8)],
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    passwordConfirm: ['', [Validators.required, Validators.minLength(8)]],
     age: ['', [Validators.required, Validators.min(15), Validators.max(90)]],
     terminos: [false, Validators.requiredTrue]
   },
@@ -41,13 +41,38 @@ constructor(private fb: FormBuilder, private validorPassword: ValidorPassword   
     return haserror && touched;
   }
 
-  onSubmit(): void {
-    if(this.form.valid) {
-      console.log('Formulario válido:', this.form.value);
-    } else {
-      console.log('Formulario inválido');
-      this.form.markAllAsTouched();
-    }
+ mostrarModal = false;
+datosRegistro: any;
+
+ onSubmit(): void {
+
+  if (this.form.valid) {
+
+    this.datosRegistro = { ...this.form.value };
+
+    this.mostrarModal = true;
+
+    this.form.reset();
+
+  } else {
+
+    this.form.markAllAsTouched();
+
+  }
+
+}
+
+cerrarModal(): void {
+  this.mostrarModal = false;
+}
+
+passwordNoCoincide(): boolean {
+
+  return (
+    this.form.hasError('passwordMismatch') &&
+    this.form.get('passwordConfirm')?.touched === true
+  );
+
 }
      
 }
